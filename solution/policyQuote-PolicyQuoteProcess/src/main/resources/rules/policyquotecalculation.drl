@@ -1,0 +1,80 @@
+//created on: Jan 27, 2009
+package org.acme.insurance
+
+//list any import classes here.
+import org.acme.insurance.Driver;
+import org.acme.insurance.Policy;
+
+global java.util.Map globals
+
+rule "Safe Youths pay 450"
+	dialect "mvel"
+	when
+		policy : Policy(price == 0, policyType == "AUTO")
+		Driver(age >= 18 && <= 24, numberOfAccidents == 0, numberOfTickets < 2) from policy.driver
+		
+	then 
+		modify (policy) {price = 450}
+		System.out.println("Rule fired : " + drools.getRule().getName());
+		System.out.println("Policy quote price is : " + policy.getPrice());
+		globals.put("policy", policy);		
+end
+
+rule "Risky Youths pay 700"
+	dialect "mvel"	
+	when
+		policy : Policy(price == 0, policyType == "AUTO")
+		Driver(age >= 18 && <= 24, numberOfAccidents > 0 || numberOfTickets >= 2) from policy.driver
+	then 
+		modify (policy) {price = 700}
+		System.out.println("Rule fired : " + drools.getRule().getName());
+		System.out.println("Policy quote price is : " + policy.getPrice());
+		globals.put("policy", policy);				
+end
+
+rule "Safe Adults pay 120"
+	dialect "mvel"	
+	when
+		policy : Policy(price == 0, policyType == "AUTO")
+		Driver(age > 24, numberOfAccidents == 0, numberOfTickets < 2) from policy.driver
+	then 
+		modify (policy) {price = 120}
+		System.out.println("Rule fired : " + drools.getRule().getName());
+		System.out.println("Policy quote price is : " + policy.getPrice());
+		globals.put("policy", policy);				
+end
+
+rule "Risky Adults pay 300"
+	dialect "mvel"	
+	when
+		policy : Policy(price == 0, policyType == "AUTO")
+		Driver(age > 24,  numberOfAccidents > 0 || numberOfTickets >= 2) from policy.driver
+	then 
+		modify (policy) {price = 300}
+		System.out.println("Rule fired : " + drools.getRule().getName());
+		System.out.println("Policy quote price is : " + policy.getPrice());
+		globals.put("policy", policy);				
+end
+
+rule "New Vehicle Surcharge"
+	dialect "mvel"
+	no-loop
+	when
+		policy : Policy(price > 0, vehicleYear > 2012)
+	then 
+		modify (policy) {price = policy.price + 100}
+//		policy.setPrice(policy.getPrice() + 100);
+		System.out.println("Rule fired : " + drools.getRule().getName());
+		System.out.println("Policy quote price is : " + policy.getPrice());
+		globals.put("policy", policy);				
+end
+
+rule "No Rule"
+	salience -10
+	when
+		policy : Policy(price == 0)
+	then 
+		System.out.println("Rule fired : " + drools.getRule().getName());
+		System.out.println("Policy quote price is : " + policy.getPrice());
+		globals.put("policy", policy);
+end

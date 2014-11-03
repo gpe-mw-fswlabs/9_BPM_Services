@@ -1,0 +1,30 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+   <soapenv:Header/>
+   <soapenv:Body>
+<pol:policyQuote
+        xmlns:pol="http://www.example.org/policyQuote"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.example.org/policyQuote ../../../main/resources/schema/policyQuote.xsd">
+
+  <pol:receivePolicyQuote>
+        <pol:requestDate>2009-01-01</pol:requestDate>
+        <pol:task>receivePolicyQuote</pol:task>
+        <pol:policyQuoteInfo>
+                <pol:policyType>TEST</pol:policyType>
+                <pol:vehicleYear>2004</pol:vehicleYear>
+                <pol:driverName>Bill Smith</pol:driverName>
+                <pol:ssn>012345678</pol:ssn>
+                <pol:dlNumber>987654321</pol:dlNumber>
+                <pol:age>30</pol:age>
+                <pol:numberOfAccidents>0</pol:numberOfAccidents>
+                <pol:numberOfTickets>0</pol:numberOfTickets>
+        <pol:creditScore>400</pol:creditScore>
+        <pol:price>0</pol:price>
+    </pol:policyQuoteInfo>
+  </pol:receivePolicyQuote>
+</pol:policyQuote>
+
+
+
+   </soapenv:Body>
+</soapenv:Envelope>

@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.jboss.org/drools" typeLanguage="http://www.java.com/javaTypes">
+  <bpmn2:itemDefinition id="_ItemDefinition_20" structureRef="org.example.policyquote.PolicyQuote"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_22" structureRef="org.example.policyquote.PolicyQuoteReply"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_24" structureRef="org.savara.policyquote.policyquoteprocess.TooManyAccidentsFault"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_26" structureRef="com.dmv.drivingrecord.DrivingRecordRequest"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_28" structureRef="com.dmv.drivingrecord.DrivingRecordResponse"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_35" structureRef="com.creditagency.creditcheck.CreditCheckRequest"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_37" structureRef="com.creditagency.creditcheck.CreditCheckResponse"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_42" structureRef="org.acme.insurance.Policy"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_525" structureRef="org.example.policyquote.PolicyQuoteInfoType"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_1835" structureRef="org.example.policyquote.ReceivePolicyQuoteReplyType"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_1837" structureRef="org.example.policyquote.PolicyQuoteFaultType"/>
+  <bpmn2:itemDefinition id="_ItemDefinition_1839" structureRef="org.example.policyquote.PolicyQuoteFault"/>
+  <bpmn2:error id="_Error_3" errorCode="TooManyAccidentsFault" name="TooManyAccidentsFault" structureRef="_ItemDefinition_24"/>
+  <bpmn2:message id="_Message_10" itemRef="_ItemDefinition_20" name="PolicyQuoteProcess_policyQuote_content"/>
+  <bpmn2:message id="_Message_11" itemRef="_ItemDefinition_22" name="PolicyQuoteProcess_policyQuote_Result"/>
+  <bpmn2:message id="_Message_12" itemRef="_ItemDefinition_26" name="DrivingRecordService_drivingRecord_content"/>
+  <bpmn2:message id="_Message_13" itemRef="_ItemDefinition_28" name="DrivingRecordService_drivingRecord_Result"/>
+  <bpmn2:message id="_Message_16" itemRef="_ItemDefinition_35" name="CreditCheckService_creditCheck_content"/>
+  <bpmn2:message id="_Message_17" itemRef="_ItemDefinition_37" name="CreditCheckService_creditCheck_Result"/>
+  <bpmn2:message id="_Message_20" itemRef="_ItemDefinition_42" name="PolicyQuoteCalculationService_calculatePolicyQuote_policy"/>
+  <bpmn2:message id="_Message_21" itemRef="_ItemDefinition_42" name="PolicyQuoteCalculationService_calculatePolicyQuote_Result"/>
+  <bpmn2:interface id="_Interface_6" implementationRef="org.savara.policyquote.policyquoteprocess.PolicyQuoteProcess" name="PolicyQuoteProcess">
+    <bpmn2:operation id="_Operation_6" implementationRef="policyQuote" name="policyQuote">
+      <bpmn2:inMessageRef>_Message_10</bpmn2:inMessageRef>
+      <bpmn2:outMessageRef>_Message_11</bpmn2:outMessageRef>
+      <bpmn2:errorRef>_Error_3</bpmn2:errorRef>
+    </bpmn2:operation>
+  </bpmn2:interface>
+  <bpmn2:interface id="_Interface_7" implementationRef="org.savara.policyquote.drivingrecordservice.DrivingRecordService" name="DrivingRecordService">
+    <bpmn2:operation id="_Operation_7" implementationRef="drivingRecord" name="drivingRecord">
+      <bpmn2:inMessageRef>_Message_12</bpmn2:inMessageRef>
+      <bpmn2:outMessageRef>_Message_13</bpmn2:outMessageRef>
+    </bpmn2:operation>
+  </bpmn2:interface>
+  <bpmn2:interface id="_Interface_9" implementationRef="org.savara.policyquote.creditcheckservice.CreditCheckService" name="CreditCheckService">
+    <bpmn2:operation id="_Operation_9" implementationRef="creditCheck" name="creditCheck">
+      <bpmn2:inMessageRef>_Message_16</bpmn2:inMessageRef>
+      <bpmn2:outMessageRef>_Message_17</bpmn2:outMessageRef>
+    </bpmn2:operation>
+  </bpmn2:interface>
+  <bpmn2:interface id="_Interface_11" implementationRef="org.acme.insurance.PolicyQuoteCalculationService" name="PolicyQuoteCalculationService">
+    <bpmn2:operation id="_Operation_11" implementationRef="calculatePolicyQuote" name="calculatePolicyQuote">
+      <bpmn2:inMessageRef>_Message_20</bpmn2:inMessageRef>
+      <bpmn2:outMessageRef>_Message_21</bpmn2:outMessageRef>
+    </bpmn2:operation>
+  </bpmn2:interface>
+  <bpmn2:process id="org.acme.insurance.policyQuoteProcess" tns:version="1" tns:packageName="org.acme.insurance" tns:adHoc="false" name="policyQuoteProcess" isExecutable="true" processType="Private">
+    <bpmn2:extensionElements>
+      <tns:import name="org.savara.policyquote.policyquoteprocess.PolicyQuoteProcess"/>
+      <tns:import name="org.example.policyquote.PolicyQuote"/>
+      <tns:import name="org.example.policyquote.PolicyQuoteReply"/>
+      <tns:import name="org.savara.policyquote.policyquoteprocess.TooManyAccidentsFault"/>
+      <tns:import name="org.savara.policyquote.drivingrecordservice.DrivingRecordService"/>
+      <tns:import name="com.dmv.drivingrecord.DrivingRecordRequest"/>
+      <tns:import name="com.dmv.drivingrecord.DrivingRecordResponse"/>
+      <tns:import name="org.savara.policyquote.creditcheckservice.CreditCheckService"/>
+      <tns:import name="com.creditagency.creditcheck.CreditCheckRequest"/>
+      <tns:import name="com.creditagency.creditcheck.CreditCheckResponse"/>
+      <tns:import name="org.acme.insurance.PolicyQuoteCalculationService"/>
+      <tns:import name="org.acme.insurance.Policy"/>
+      <tns:import name="org.example.policyquote.PolicyQuoteInfoType"/>
+      <tns:import name="org.example.policyquote.ReceivePolicyQuoteReplyType"/>
+      <tns:import name="org.example.policyquote.PolicyQuoteFaultType"/>
+      <tns:import name="org.example.policyquote.PolicyQuoteFault"/>
+    </bpmn2:extensionElements>
+    <bpmn2:property id="PolicyQuoteVar" itemSubjectRef="_ItemDefinition_20"/>
+    <bpmn2:property id="PolicyQuoteReplyVar" itemSubjectRef="_ItemDefinition_22"/>
+    <bpmn2:property id="TooManyAccidentsFaultVar" itemSubjectRef="_ItemDefinition_24"/>
+    <bpmn2:property id="DrivingRecordRequestVar" itemSubjectRef="_ItemDefinition_26"/>
+    <bpmn2:property id="DrivingRecordResponseVar" itemSubjectRef="_ItemDefinition_28"/>
+    <bpmn2:property id="CreditCheckRequestVar" itemSubjectRef="_ItemDefinition_35"/>
+    <bpmn2:property id="CreditCheckResponseVar" itemSubjectRef="_ItemDefinition_37"/>
+    <bpmn2:property id="PolicyVar" itemSubjectRef="_ItemDefinition_42"/>
+    <bpmn2:property id="PolicyQuoteInfoVar" itemSubjectRef="_ItemDefinition_525"/>
+    <bpmn2:startEvent id="StartEvent_1" name="StartProcess">
+      <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_1" tns:priority="1" name="" sourceRef="StartEvent_1" targetRef="ServiceTask_1"/>
+    <bpmn2:serviceTask id="ServiceTask_1" name="checkDrivingRecord" implementation="##SwitchYard" operationRef="_Operation_7">
+      <bpmn2:extensionElements>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <tns:script>PolicyQuoteInfoType policyQuoteInfo = PolicyQuoteVar.getReceivePolicyQuote().getPolicyQuoteInfo();
+System.out.println(&quot;PolicyQuote SSN is:&quot; + policyQuoteInfo.getSsn());&#xD;
+DrivingRecordRequest drivingRecordReq = new DrivingRecordRequest();
+drivingRecordReq.setAge(policyQuoteInfo.getAge());
+drivingRecordReq.setName(policyQuoteInfo.getDriverName());
+drivingRecordReq.setDlNumber(policyQuoteInfo.getDlNumber());
+drivingRecordReq.setSsn(policyQuoteInfo.getSsn());
+kcontext.setVariable(&quot;DrivingRecordRequestVar&quot;, drivingRecordReq);
+kcontext.setVariable(&quot;PolicyQuoteInfoVar&quot;, policyQuoteInfo);</tns:script>
+        </tns:onEntry-script>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <tns:script>PolicyQuoteInfoVar.setNumberOfAccidents(DrivingRecordResponseVar.getNumberOfAccidents());
+PolicyQuoteInfoVar.setNumberOfTickets(DrivingRecordResponseVar.getNumberOfTickets());
+
+</tns:script>
+        </tns:onExit-script>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="InputOutputSpecification_3">
+        <bpmn2:dataInput id="DataInput_1" itemSubjectRef="_ItemDefinition_26" name="Parameter"/>
+        <bpmn2:dataOutput id="DataOutput_1" itemSubjectRef="_ItemDefinition_28" name="Result"/>
+        <bpmn2:inputSet id="InputSet_1" name="Input Set 1">
+          <bpmn2:dataInputRefs>DataInput_1</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="OutputSet_1" name="Output Set 1">
+          <bpmn2:dataOutputRefs>DataOutput_1</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_1">
+        <bpmn2:sourceRef>DrivingRecordRequestVar</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_1</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_1">
+        <bpmn2:sourceRef>DataOutput_1</bpmn2:sourceRef>
+        <bpmn2:targetRef>DrivingRecordResponseVar</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_2" tns:priority="1" name="" sourceRef="ServiceTask_1" targetRef="ExclusiveGateway_1"/>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_1" name="Accidents" gatewayDirection="Diverging">
+      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_8</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_3" tns:priority="1" name="LT 5" sourceRef="ExclusiveGateway_1" targetRef="ServiceTask_2">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_1" language="http://www.java.com/java">return DrivingRecordResponseVar.getNumberOfAccidents() &lt; 5;</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:serviceTask id="ServiceTask_2" name="checkCredit" implementation="##SwitchYard" operationRef="_Operation_9">
+      <bpmn2:extensionElements>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <tns:script>CreditCheckRequest creditCheckReq = new CreditCheckRequest();
+creditCheckReq.setSsn(PolicyQuoteInfoVar.getSsn());
+kcontext.setVariable(&quot;CreditCheckRequestVar&quot;, creditCheckReq);
+</tns:script>
+        </tns:onEntry-script>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <tns:script>PolicyQuoteInfoVar.setCreditScore(CreditCheckResponseVar.getScore());</tns:script>
+        </tns:onExit-script>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_3</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="InputOutputSpecification_5">
+        <bpmn2:dataInput id="DataInput_7" itemSubjectRef="_ItemDefinition_35" name="Parameter"/>
+        <bpmn2:dataOutput id="DataOutput_7" itemSubjectRef="_ItemDefinition_37" name="Result"/>
+        <bpmn2:inputSet id="InputSet_2" name="Input Set 2">
+          <bpmn2:dataInputRefs>DataInput_7</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="OutputSet_2" name="Output Set 2">
+          <bpmn2:dataOutputRefs>DataOutput_7</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_2">
+        <bpmn2:sourceRef>CreditCheckRequestVar</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_7</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_2">
+        <bpmn2:sourceRef>DataOutput_7</bpmn2:sourceRef>
+        <bpmn2:targetRef>CreditCheckResponseVar</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:serviceTask>
+    <bpmn2:serviceTask id="ServiceTask_3" name="calculatePolicyQuote" implementation="##SwitchYard" operationRef="_Operation_11">
+      <bpmn2:extensionElements>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <tns:script>Policy policy = PolicyTransformer.transformPolicyQuoteToPolicy(PolicyQuoteInfoVar);
+kcontext.setVariable(&quot;PolicyVar&quot;, policy);</tns:script>
+        </tns:onEntry-script>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <tns:script>PolicyQuoteInfoVar.setPrice(PolicyVar.getPrice());</tns:script>
+        </tns:onExit-script>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="InputOutputSpecification_7">
+        <bpmn2:dataInput id="DataInput_13" itemSubjectRef="_ItemDefinition_42" name="Parameter"/>
+        <bpmn2:dataOutput id="DataOutput_13" itemSubjectRef="_ItemDefinition_42" name="Result"/>
+        <bpmn2:inputSet id="InputSet_3" name="Input Set 3">
+          <bpmn2:dataInputRefs>DataInput_13</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="OutputSet_3" name="Output Set 3">
+          <bpmn2:dataOutputRefs>DataOutput_13</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_3">
+        <bpmn2:sourceRef>PolicyVar</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_13</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="DataOutputAssociation_3">
+        <bpmn2:sourceRef>DataOutput_13</bpmn2:sourceRef>
+        <bpmn2:targetRef>PolicyVar</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" tns:priority="1" name="" sourceRef="ServiceTask_2" targetRef="ServiceTask_3"/>
+    <bpmn2:scriptTask id="ScriptTask_1" name="preparePolicyQuoteReply" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
+      <bpmn2:script>PolicyQuoteReply ret = new PolicyQuoteReply();
+ReceivePolicyQuoteReplyType reply = new ReceivePolicyQuoteReplyType();
+reply.setPolicyQuoteInfo(PolicyQuoteInfoVar);
+reply.setRequestDate(PolicyQuoteVar.getReceivePolicyQuote().getRequestDate());
+reply.setTask(PolicyQuoteVar.getReceivePolicyQuote().getTask());
+ret.setReceivePolicyQuote(reply);
+kcontext.setVariable(&quot;PolicyQuoteReplyVar&quot;, ret);
+</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_7" tns:priority="1" name="" sourceRef="ServiceTask_3" targetRef="ScriptTask_1"/>
+    <bpmn2:scriptTask id="ScriptTask_2" name="preparePolicyQuoteFault" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
+      <bpmn2:script>PolicyQuoteFault policyQuoteFault = new PolicyQuoteFault();
+PolicyQuoteFaultType fault = new PolicyQuoteFaultType();
+fault.setPolicyQuoteInfo(PolicyQuoteInfoVar);
+fault.setCode(&quot;FAULT_CODE_01&quot;);
+fault.setReason(&quot;Too Many Accidents&quot;);
+fault.setTask(PolicyQuoteVar.getReceivePolicyQuote().getTask());
+policyQuoteFault.setPolicyQuoteFault(fault);
+TooManyAccidentsFault tooMany = new TooManyAccidentsFault(&quot;too many accidents&quot;, policyQuoteFault);
+kcontext.setVariable(&quot;TooManyAccidentsFaultVar&quot;, tooMany);
+</bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_8" tns:priority="1" name="GTE 5" sourceRef="ExclusiveGateway_1" targetRef="ScriptTask_2">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="FormalExpression_2" language="http://www.java.com/java">return DrivingRecordResponseVar.getNumberOfAccidents() >= 5;</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:endEvent id="EndEvent_3" name="Too Many Accidents">
+      <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
+      <bpmn2:dataInput id="DataInput_2" name="Error_2_Input"/>
+      <bpmn2:dataInputAssociation id="DataInputAssociation_4">
+        <bpmn2:sourceRef>TooManyAccidentsFaultVar</bpmn2:sourceRef>
+        <bpmn2:targetRef>DataInput_2</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:inputSet id="InputSet_4" name="Input Set 4">
+        <bpmn2:dataInputRefs>DataInput_2</bpmn2:dataInputRefs>
+      </bpmn2:inputSet>
+      <bpmn2:errorEventDefinition id="ErrorEventDefinition_2" errorRef="_Error_3"/>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_9" tns:priority="1" name="" sourceRef="ScriptTask_2" targetRef="EndEvent_3"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_10" tns:priority="1" name="" sourceRef="ScriptTask_1" targetRef="EndEvent_4"/>
+    <bpmn2:endEvent id="EndEvent_4" name="">
+      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
+    </bpmn2:endEvent>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_Process_1" bpmnElement="org.acme.insurance.policyQuoteProcess">
+      <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_1">
+        <dc:Bounds height="0.0" width="0.0" x="45.0" y="45.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ServiceTask_1" bpmnElement="ServiceTask_1">
+        <dc:Bounds height="50.0" width="110.0" x="160.0" y="38.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ExclusiveGateway_1" bpmnElement="ExclusiveGateway_1" isMarkerVisible="true">
+        <dc:Bounds height="50.0" width="50.0" x="345.0" y="38.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ServiceTask_2" bpmnElement="ServiceTask_2">
+        <dc:Bounds height="50.0" width="110.0" x="480.0" y="38.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ServiceTask_3" bpmnElement="ServiceTask_3">
+        <dc:Bounds height="50.0" width="110.0" x="690.0" y="38.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_1" bpmnElement="ScriptTask_1">
+        <dc:Bounds height="50.0" width="110.0" x="890.0" y="38.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_ScriptTask_2" bpmnElement="ScriptTask_2">
+        <dc:Bounds height="50.0" width="110.0" x="545.0" y="155.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_EndEvent_3" bpmnElement="EndEvent_3">
+        <dc:Bounds height="36.0" width="36.0" x="723.0" y="162.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_EndEvent_4" bpmnElement="EndEvent_4">
+        <dc:Bounds height="36.0" width="36.0" x="1068.0" y="45.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_ServiceTask_1">
+        <di:waypoint xsi:type="dc:Point" x="81.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="116.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="116.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="160.0" y="63.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_ServiceTask_1" targetElement="BPMNShape_ExclusiveGateway_1">
+        <di:waypoint xsi:type="dc:Point" x="270.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="303.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="303.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="345.0" y="63.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_ServiceTask_2">
+        <di:waypoint xsi:type="dc:Point" x="396.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="433.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="433.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="480.0" y="63.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ServiceTask_2" targetElement="BPMNShape_ServiceTask_3">
+        <di:waypoint xsi:type="dc:Point" x="590.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="635.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="635.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="690.0" y="63.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_ServiceTask_3" targetElement="BPMNShape_ScriptTask_1">
+        <di:waypoint xsi:type="dc:Point" x="800.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="840.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="840.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="890.0" y="63.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_ScriptTask_2">
+        <di:waypoint xsi:type="dc:Point" x="370.0" y="89.0"/>
+        <di:waypoint xsi:type="dc:Point" x="370.0" y="180.0"/>
+        <di:waypoint xsi:type="dc:Point" x="545.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_ScriptTask_2" targetElement="BPMNShape_EndEvent_3">
+        <di:waypoint xsi:type="dc:Point" x="655.0" y="180.0"/>
+        <di:waypoint xsi:type="dc:Point" x="685.0" y="180.0"/>
+        <di:waypoint xsi:type="dc:Point" x="685.0" y="180.0"/>
+        <di:waypoint xsi:type="dc:Point" x="723.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="BPMNShape_ScriptTask_1" targetElement="BPMNShape_EndEvent_4">
+        <di:waypoint xsi:type="dc:Point" x="1000.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1030.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1030.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1068.0" y="63.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

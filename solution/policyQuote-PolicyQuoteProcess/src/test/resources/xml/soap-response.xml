@@ -1,0 +1,18 @@
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><SOAP-ENV:Body><policyQuoteReply xmlns="http://www.example.org/policyQuote">
+    <receivePolicyQuote>
+        <requestDate>2009-01-01</requestDate>
+        <task>receivePolicyQuote</task>
+        <policyQuoteInfo>
+            <policyType>AUTO</policyType>
+            <vehicleYear>2004</vehicleYear>
+            <driverName>Bill Smith</driverName>
+            <ssn>012345678</ssn>
+            <dlNumber>987654321</dlNumber>
+            <age>30</age>
+            <numberOfAccidents>1</numberOfAccidents>
+            <numberOfTickets>2</numberOfTickets>
+            <creditScore>500</creditScore>
+            <price>450</price>
+        </policyQuoteInfo>
+    </receivePolicyQuote>
+</policyQuoteReply></SOAP-ENV:Body></SOAP-ENV:Envelope>

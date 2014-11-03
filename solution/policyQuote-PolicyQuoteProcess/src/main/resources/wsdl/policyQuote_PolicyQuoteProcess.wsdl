@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns0="http://www.example.org/policyQuote" xmlns:pns4="http://www.savara.org/policyQuote/PolicyQuoteProcess" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="PolicyQuoteProcess" targetNamespace="http://www.savara.org/policyQuote/PolicyQuoteProcess">
+    <types xmlns="http://schemas.xmlsoap.org/wsdl/">
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://www.example.org/policyQuote" schemaLocation="schema/policyQuote.xsd"/>
+        </schema>
+    </types>
+    <wsdl:message name="TooManyAccidentsFault">
+        <wsdl:part element="ns0:policyQuoteFault" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="policyQuoteResponse">
+        <wsdl:part element="ns0:policyQuoteReply" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="policyQuoteRequest">
+        <wsdl:part element="ns0:policyQuote" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="PolicyQuoteProcess">
+        <wsdl:operation name="policyQuote">
+            <wsdl:input message="pns4:policyQuoteRequest">
+            </wsdl:input>
+            <wsdl:output message="pns4:policyQuoteResponse">
+            </wsdl:output>
+            <wsdl:fault message="pns4:TooManyAccidentsFault" name="TooManyAccidents">
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="PolicyQuoteProcessBinding" type="pns4:PolicyQuoteProcess">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="policyQuote">
+            <soap:operation soapAction="http://www.savara.org/policyQuote/PolicyQuoteProcess/policyQuote"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="TooManyAccidents">
+                <soap:fault name="TooManyAccidents" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="PolicyQuoteProcessService">
+        <wsdl:port binding="pns4:PolicyQuoteProcessBinding" name="PolicyQuoteProcessPort">
+            <soap:address location="http://localhost:8080/PolicyQuoteProcessService/PolicyQuoteProcessPort"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

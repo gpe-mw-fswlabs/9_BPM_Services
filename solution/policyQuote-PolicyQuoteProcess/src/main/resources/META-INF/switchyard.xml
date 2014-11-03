@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sy:switchyard xmlns:bpm="urn:switchyard-component-bpm:config:1.1" xmlns:rules="urn:switchyard-component-rules:config:1.1" xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912" xmlns:sy="urn:switchyard-config:switchyard:1.1" xmlns:soap="urn:switchyard-component-soap:config:1.1" xmlns:transform="urn:switchyard-config:transform:1.1" xmlns:xform="urn:switchyard-config:transform:1.1" name="switchyard-example" targetNamespace="urn:PolicyQuoteProcess:1.0">
+
+
+  <sca:composite name="PolicyQuoteProcess" targetNamespace="http://www.savara.org/policyQuote/PolicyQuoteProcess">
+    <sca:service name="PolicyQuoteProcess" promote="PolicyQuoteProcessComponent/PolicyQuoteProcess">
+      <sca:interface.wsdl interface="wsdl/policyQuote_PolicyQuoteProcess.wsdl#wsdl.porttype(PolicyQuoteProcess)"/>
+      <soap:binding.soap>
+        <soap:wsdl>wsdl/policyQuote_PolicyQuoteProcess.wsdl</soap:wsdl>
+        <soap:socketAddr>:18001</soap:socketAddr>
+      </soap:binding.soap>
+    </sca:service>
+    <sca:reference name="DrivingRecordService" multiplicity="1..1" promote="PolicyQuoteProcessComponent/DrivingRecordService">
+      <sca:interface.wsdl interface="wsdl/policyQuote_DrivingRecordService.wsdl#wsdl.porttype(DrivingRecordService)"/>
+      <soap:binding.soap>
+        <soap:wsdl>wsdl/policyQuote_DrivingRecordService.wsdl</soap:wsdl>
+        <soap:socketAddr>:18001</soap:socketAddr>
+      </soap:binding.soap>
+    </sca:reference>
+    <sca:reference name="CreditCheckService" multiplicity="1..1" promote="PolicyQuoteProcessComponent/CreditCheckService">
+      <sca:interface.wsdl interface="wsdl/policyQuote_CreditCheckService.wsdl#wsdl.porttype(CreditCheckService)"/>
+      <soap:binding.soap>
+        <soap:wsdl>wsdl/policyQuote_CreditCheckService.wsdl</soap:wsdl>
+        <soap:socketAddr>:18001</soap:socketAddr>
+      </soap:binding.soap>
+    </sca:reference>
+    <sca:component name="PolicyQuoteProcessComponent">
+        <bpm:implementation.bpm processId="org.acme.insurance.policyQuoteProcess">
+        <bpm:manifest>
+          <bpm:resources>
+            <bpm:resource location="process/policyQuoteProcess.bpmn2" type="BPMN2"/>
+          </bpm:resources>
+        </bpm:manifest>
+        <bpm:operations>
+          <bpm:operation name="policyQuote" type="START_PROCESS">
+            <bpm:inputs>
+              <bpm:input from="message.content" to="PolicyQuoteVar"/>
+            </bpm:inputs>
+            <bpm:outputs>
+              <bpm:output from="PolicyQuoteReplyVar" to="message.content"/>
+            </bpm:outputs>
+            <bpm:faults>
+              <bpm:fault from="TooManyAccidentsFaultVar" to="message.content"/>
+            </bpm:faults>
+          </bpm:operation>
+        </bpm:operations>
+      </bpm:implementation.bpm>
+
+      <sca:service name="PolicyQuoteProcess">
+        <sca:interface.java interface="org.savara.policyquote.policyquoteprocess.PolicyQuoteProcess"/>
+      </sca:service>
+      <sca:reference name="DrivingRecordService">
+        <sca:interface.java interface="org.savara.policyquote.drivingrecordservice.DrivingRecordService"/>
+      </sca:reference>
+      <sca:reference name="CreditCheckService">
+        <sca:interface.java interface="org.savara.policyquote.creditcheckservice.CreditCheckService"/>
+      </sca:reference>
+      <sca:reference name="PolicyQuoteCalculationService">
+        <sca:interface.java interface="org.acme.insurance.PolicyQuoteCalculationService"/>
+      </sca:reference>
+
+    </sca:component>
+    <sca:component name="Policyquotecalculation">
+      <rules:implementation.rules>
+        <rules:manifest>
+          <rules:resources>
+            <rules:resource location="rules/policyquotecalculation.drl" type="DRL"/>
+          </rules:resources>
+        </rules:manifest>
+        <rules:operations>
+          <rules:operation name="calculatePolicyQuote" type="EXECUTE">
+            <rules:inputs>
+              <rules:input from="message.content" to="policy"/>
+            </rules:inputs>
+            <rules:outputs>
+              <rules:output from="globals.policy" to="message.content"/>
+            </rules:outputs>
+          </rules:operation>
+        </rules:operations>
+      </rules:implementation.rules>
+      <sca:service name="PolicyQuoteCalculationService">
+        <sca:interface.java interface="org.acme.insurance.PolicyQuoteCalculationService"/>
+      </sca:service>
+    </sca:component>
+
+  </sca:composite>
+  <transforms>
+    <xform:transform.jaxb from="{http://www.example.org/policyQuote}policyQuote" to="java:org.example.policyquote.PolicyQuote" contextPath="org.example.policyquote"/>
+    <xform:transform.jaxb from="java:org.example.policyquote.PolicyQuoteReply" to="{http://www.example.org/policyQuote}policyQuoteReply" contextPath="org.example.policyquote"/>
+    <xform:transform.java from="java:org.savara.policyquote.policyquoteprocess.TooManyAccidentsFault" to="{http://www.example.org/policyQuote}policyQuoteFault" class="org.savara.policyquote.policyquoteprocess.TooManyAccidentsFaultProviderTransformer"/>
+    <xform:transform.jaxb from="java:com.dmv.drivingrecord.DrivingRecordRequest" to="{http://dmv.com/drivingRecord}drivingRecordRequest" contextPath="com.dmv.drivingrecord"/>
+    <xform:transform.jaxb from="{http://dmv.com/drivingRecord}drivingRecordResponse" to="java:com.dmv.drivingrecord.DrivingRecordResponse" contextPath="com.dmv.drivingrecord"/>
+    <xform:transform.jaxb from="java:com.creditagency.creditcheck.CreditCheckRequest" to="{http://creditagency.com/creditCheck}creditCheckRequest" contextPath="com.creditagency.creditcheck"/>
+    <xform:transform.jaxb from="{http://creditagency.com/creditCheck}creditCheckResponse" to="java:com.creditagency.creditcheck.CreditCheckResponse" contextPath="com.creditagency.creditcheck"/>
+  </transforms>
+</sy:switchyard>
